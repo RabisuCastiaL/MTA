@@ -1,0 +1,78 @@
+ #!/bin/bash -x
+ #==============================================================================#
+ #                                mtasa-install                                 #
+ #------------------------------------------------------------------------------#
+ #                 Bu Shell Dosyası Rabisu için Hazırlanmıştır.                 #
+ #                               www.Rabisu.com                                 #
+ #==============================================================================#
+  
+ ARCH_TYPE=""
+  
+ getArchitecture()
+ {
+     if ((1<<32)); then
+         ARCH_TYPE="_x64"
+     fi
+ }
+  
+ downloadFiles()
+ {
+     wget http://linux.mtasa.com/dl/multitheftauto_linux${ARCH_TYPE}.tar.gz
+     wget http://linux.mtasa.com/dl/baseconfig.tar.gz
+ }
+  
+ unpack()
+ {
+     tar -xf multitheftauto_linux${ARCH_TYPE}.tar.gz
+     tar -xf baseconfig.tar.gz
+ }
+  
+ moveConfig()
+ {
+     mv baseconfig/* multitheftauto_linux${ARCH_TYPE}/mods/deathmatch
+     rm -rf baseconfig
+     cd multitheftauto_linux${ARCH_TYPE}
+ }
+  
+ installResources()
+ {
+     mkdir mods/deathmatch/resources
+     cd mods/deathmatch/resources
+     wget http://mirror.mtasa.com/mtasa/resources/mtasa-resources-latest.zip
+     unzip mtasa-resources-latest.zip
+     cd ../../..
+ }
+  
+ clean()
+ {
+     rm -f ../multitheftauto_linux${ARCH_TYPE}.tar.gz
+     rm -f ../baseconfig.tar.gz
+     rm -f mods/deathmatch/resources/mtasa-resources-latest.zip
+ }
+ 
+ name()
+ {
+     mv ~/multitheftauto_linux${ARCH_TYPE} ~/rabisu_mta${ARCH_TYPE}
+ }
+  
+ main()
+ {
+     getArchitecture
+     clean
+     downloadFiles
+     unpack
+     moveConfig
+     installResources
+     clean
+     name
+  	
+     if ((1<<32)); then # 64 bits
+	echo -e "\e[1;32m Kurulum Başarıyla Tamamlandı! (x64) \e[0m"
+	echo -e "\e[1;41m Rabisu.com Tarafından Hazırlanmıştır. \e[0m"
+     else
+        echo -e "\e[1;32m Kurulum Başarıyla Tamamlandı! (x32) \e[0m"
+	echo -e "\e[1;41m Rabisu.com Tarafından Hazırlanmıştır. \e[0m"
+     fi
+ }
+  
+ main # calling program entry point
